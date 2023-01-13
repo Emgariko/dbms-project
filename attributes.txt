@@ -1,0 +1,72 @@
+
+user_id
+user_name
+age
+sex
+c_weight
+c_height
+email
+
+log_id
+// user_id
+date
+weight
+height
+
+food_id
+food_title
+cal
+proteins
+fats
+carbo
+// creator_id
+
+meal_id
+meal_datetime
+title
+
+workouts - базовые тренировки
+например - силовая тренировка на грудь(с описанием упражнений), пробежка 3км
+например - ходьба, 5 км
+wo_id
+wo_title
+desc
+
+st_id
+name
+
+day_id
+day_title
+day_number
+
+физические активности
+например, дневная тренировка, было выполнено: силовая тренировка на грудь.
+act_id
+duration
+act_datetime
+act_title
+
+
+ФЗ:
+user_id -> user_name
+user_id -> age
+user_id -> sex
+user_id -> c_weight
+user_id -> c_height
+user_id -> email
+email -> user_id
+
+Keys: user_id, email
+
+log_id -> date
+log_id -> weight
+log_id -> height
+log_id -> user_id
+
+Keys: log_id
+
+food_id -> name
+food_id -> name
+food_id -> proteins
+food_id -> fats
+food_id -> carbo
