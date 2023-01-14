@@ -6,9 +6,10 @@ sex
 c_weight
 c_height
 email
+cur_st_id
 
 log_id
-// user_id
+user_id
 date
 weight
 height
@@ -19,11 +20,13 @@ cal
 proteins
 fats
 carbo
-// creator_id
+enabled
+user_id // creator_id
 
 meal_id
 meal_datetime
 title
+user_id // person
 
 workouts - базовые тренировки
 например - силовая тренировка на грудь(с описанием упражнений), пробежка 3км
@@ -31,13 +34,17 @@ workouts - базовые тренировки
 wo_id
 wo_title
 desc
+enabled
+user_id // creator_id
 
 st_id
 name
+user_id // creator_id
 
 day_id
 day_title
 day_number
+st_id
 
 физические активности
 например, дневная тренировка, было выполнено: силовая тренировка на грудь.
@@ -45,8 +52,10 @@ act_id
 duration
 act_datetime
 act_title
+wo_id
+user_id // person
 
-
+_____________________________________________
 ФЗ:
 user_id -> user_name
 user_id -> age
@@ -54,6 +63,7 @@ user_id -> sex
 user_id -> c_weight
 user_id -> c_height
 user_id -> email
+user_id -> cur_st_id
 email -> user_id
 
 Keys: user_id, email
@@ -66,7 +76,42 @@ log_id -> user_id
 Keys: log_id
 
 food_id -> name
-food_id -> name
 food_id -> proteins
 food_id -> fats
 food_id -> carbo
+food_id -> user_id // creator_id
+food_id -> enabled
+
+Keys: food_id
+
+meal_id -> datetime
+meal_id -> title
+meal_id -> user_id // person
+
+Keys: meal_id
+
+wo_id -> wo_title
+wo_id -> desc
+wo_id -> enabled
+wo_id -> user_id // creator_id
+
+Keys: wo_id
+
+st_id -> name
+st_id -> user_id // creator_id
+
+Keys: st_id
+
+day_id -> day_title
+day_id -> day_number
+day_id -> st_id
+
+Keys: day_id, + еще возможно? {day_id, day_number}
+
+act_id -> duration
+act_id -> act_datetime
+act_id -> act_title
+act_id -> wo_id
+act_id -> user_id // person
+
+Keys: act_id
