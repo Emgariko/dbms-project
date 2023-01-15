@@ -115,3 +115,34 @@ act_id -> wo_id
 act_id -> user_id // person
 
 Keys: act_id
+
+
+
+____________________________________________________________
+Отношения:
+
+users:
+- user_id
+- user_name
+- age
+- sex
+- c_weight
+- c_height
+- email
+- cur_st_id
+
+logs
+- log_id
+- user_id
+- date
+- weight
+- height
+
+foods
+- food_title
+- cal
+- proteins
+- fats
+- carbo
+- enabled
+- user_id // creator_id
