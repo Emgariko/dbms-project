@@ -21,7 +21,8 @@ create table if not exists Users
     Sex    boolean,
     Weight float       not null,
     Height float       not null,
-    Email  varchar(64) not null
+    Email  varchar(64) not null,
+    unique (Email)
 );
 
 create table if not exists Logs
@@ -78,7 +79,8 @@ create table if not exists Activities
     StartedAt     timestamptz not null,
     EndedAt       timestamptz not null,
     UserId        int         not null references Users (UserId),
-    WorkoutId     int         not null references Workouts (WorkoutId)
+    WorkoutId     int         not null references Workouts (WorkoutId),
+    unique (StartedAt, UserId)
 );
 
 create table if not exists Strategies
