@@ -146,3 +146,24 @@ foods
 - carbo
 - enabled
 - user_id // creator_id
+
+
+
+
+
+__________
+RELATIONS:
+
+
+Logs, //
+Meals //
+MealsFoodsAmount //
+Foods //
+Users, //
+Activities, //
+Workouts, //
+Strategies, //
+UsersStrategies, //
+Days, //
+DaysFoodsAmount,
+DaysWorkoutsOrder //
