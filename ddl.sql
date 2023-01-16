@@ -48,7 +48,7 @@ create table if not exists Foods
 (
     FoodId    int primary key,
     FoodTitle varchar(32) not null,
-    Cal       float       not null,
+    Cals       float       not null,
     Carbs     float       not null,
     Protein   float       not null,
     Fat       float       not null,
