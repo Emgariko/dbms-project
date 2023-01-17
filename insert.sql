@@ -4,7 +4,7 @@ values (1, 'Макаров Алексей Витальевич', 25, True, 70, 1
        (3, 'Петров Петр Петрович', 35, True, 90, 190, 'petyapetrov@mail.ru'),
        (4, 'Александрова Александра Петровна', 20, False, 60, 160, 'alexa_petrovna@mail.ru'),
        (5, 'Вкуснов Василий Продуктович', 25, null, 70, 180, 'food_cretor@mail.ru'),
-       (6, 'Фитнес Тренер Спортович', 32, True, 80, 170, 'ka4ok@mail.ru');
+       (6, 'Фитнес Тренер Спортович', 32, True, 80, 170, 'ka4ok@gym.ru');
 
 insert into Logs(LogId, LogDateTime, Weight, Height, UserId)
 values (1, '2022-12-01 10:00:00', 67, 180, 1),

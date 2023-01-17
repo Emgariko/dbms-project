@@ -80,3 +80,8 @@ from Users
      (select distinct UserId
       from Activities
       where EndedAt - StartedAt = (select max(EndedAt - StartedAt) from Activities)) as LongestActivityUsers;
+
+-- Общее количество продуктов, тренировок и стратегий созданных пользователем
+select (select count(*) from Foods where OwnerId = :UserId) +
+       (select count(*) from Workouts where OwnerId = :UserId) +
+       (select count(*) from Strategies where OwnerId = :UserId) as TotalCreatedCount;
