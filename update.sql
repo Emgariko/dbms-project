@@ -1,24 +1,26 @@
 -- Запись в журнал о весе и росте
+-- Уровень изоляции транзацкии - RU, т.к. чтений нету
 create or replace function writeLog(
-    LogId int,
-    Weight float,
-    Height float,
-    UserId int
+    LogId_ int,
+    Weight_ float,
+    Height_ float,
+    UserId_ int
 )
     returns bool
     language plpgsql
 as
 $$
 begin
-    insert into Logs(LogId, LogDateTime, Weight, Height, UserId) values (LogId, now(), Weight, Height, UserId);
+    insert into Logs(LogId, LogDateTime, Weight, Height, UserId) values (LogId_, now(), Weight_, Height_, UserId_);
     return true;
 end;
 $$;
 
--- Запись в журнал о весе
+-- Запись в журнал о весе и росте
 select writeLog(21, 80.5, 180, 1);
 
 -- Создание пользователя
+-- Уровень изоляции транзацкии - RC, так как есть чтение из Logs
 create or replace function createUser(
     UserId_ int,
     Name_ varchar(64),
@@ -49,6 +51,7 @@ $$;
 select createUser(7, 'Тестов Кейс Валидович', 18, true, 80.5, 180, 'test@testcase.ru');
 
 -- utility function
+-- Уровень изоляции транзацкии - RC
 create or replace function checkStrategy(
     UserId_ int
 )
@@ -66,6 +69,7 @@ end;
 $$;
 
 -- Поменять/указать стратегию пользователю
+-- Уровень изоляции транзацкии - RC, RU не подойдет, но RC подойдет
 create or replace function setStrategy(
     UserId_ int,
     StrategyId_ int
@@ -91,6 +95,7 @@ select setStrategy(7, 1);
 select setStrategy(7, 1);
 
 -- Поменять данные о теле пользователя
+-- Уровень изоляции транзацкии - RC
 create or replace function changeBodyData(
     UserId_ int,
     Weight_ float,
@@ -141,6 +146,7 @@ $$;
 select CreateFood(16, 'Хлеб белый', 265, 49.1, 9.2, 3.2, 7);
 
 -- utility function
+-- Уровень изоляции транзацкии - RC
 create or replace function checkFood(
     FoodId_ int
 )
@@ -164,6 +170,7 @@ end;
 $$;
 
 -- Изменить продукт
+-- Уровень изоляции транзацкии - RC, RU не подходит
 create or replace function changeFood(
     FoodId_ int,
     FoodTitle_ varchar(32),
@@ -193,4 +200,4 @@ select ChangeFood(16, 'Хлеб пшеничнй', 270, 49.5, 10.4, 3.4, 7);
 
 insert into MealsFoodsAmount(MealId, FoodId, Amount, Weight) values (1, 16, 1, 100);
 -- Изменение продукта, изменение не успешно, потому что продукт уже добавлен в прием пищи
-select ChangeFood(16, 'Хлеб пшеничнй', 270, 49.5, 10.4, 3.4, 7);
+select ChangeFood(16, 'Хлеб пшеничнй измененный', 270, 49.5, 10.4, 3.4, 7);

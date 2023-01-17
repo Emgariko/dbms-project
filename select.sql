@@ -1,10 +1,14 @@
--- Найти самый калорийный продукт(id и название) который ел пользователь в рамках одного приема пищи
-select FoodId, FoodTitle, (Amount * Weight * Cals / 100) as TotalCals
+create view ConsumedFoodsCals as
+select MealId, UserId, FoodId, FoodTitle, (Amount * Weight * Cals / 100) as TotalCals
 from Meals
          natural join MealsFoodsAmount
-         natural join Foods
-where UserId = :UserId
-order by Amount * Weight * Cals / 100 desc
+         natural join Foods;
+
+-- Найти самый калорийный продукт(id и название) который ел пользователь в рамках одного приема пищи
+select FoodId, FoodTitle, TotalCals
+from ConsumedFoodsCals
+where UserId = 1 -- :UserId
+order by TotalCals desc
 limit 1;
 
 -- Найти самый калорийный прием пищи(id и название) пользователя
@@ -12,12 +16,10 @@ select MealId, MealTitle
 from Meals
          natural join
      (select MealId
-      from Meals
-               natural join MealsFoodsAmount
-               natural join Foods
-      where UserId = :UserId
+      from ConsumedFoodsCals
+      where UserId = 2 -- :UserId
       group by MealId
-      order by sum(Amount * Weight * Cals / 100) desc
+      order by sum(TotalCals) desc
       limit 1) as BiggestMeal;
 
 -- Найти пользователя(id и имя) с самой большой разницой в весе по истории записей
@@ -82,6 +84,25 @@ from Users
       where EndedAt - StartedAt = (select max(EndedAt - StartedAt) from Activities)) as LongestActivityUsers;
 
 -- Общее количество продуктов, тренировок и стратегий созданных пользователем
-select (select count(*) from Foods where OwnerId = :UserId) +
-       (select count(*) from Workouts where OwnerId = :UserId) +
-       (select count(*) from Strategies where OwnerId = :UserId) as TotalCreatedCount;
+select (select count(*) from Foods where OwnerId = 1) + -- :UserId
+       (select count(*) from Workouts where OwnerId = 1) + -- :UserId
+       (select count(*) from Strategies where OwnerId = 1) as TotalCreatedCount; -- :UserId
+
+-- кол-во потребленных пользователем продуктов
+select count(FoodId)
+from ConsumedFoodsCals
+where UserId = 1; -- :UserId
+
+-- Найти тренировки пользователя выполненные больше месяца назад
+select ActivityId, ActivityTitle, WorkoutId, WorkoutTitle
+from Workouts
+         natural join
+     (select ActivityId, ActivityTitle
+      from Activities
+      where UserId = 2 -- :UserId
+        and StartedAt < now()::timestamptz - interval '1 month') OldActivities;
+
+-- Найти все продукты с высоким содержанием углеводов
+select FoodId, FoodTitle
+from Foods
+where Carbs > 50;

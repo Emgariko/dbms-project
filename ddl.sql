@@ -1,18 +1,3 @@
---  drop all tables
-drop table if exists Users cascade;
-drop table if exists Logs cascade;
-drop table if exists Meals cascade;
-drop table if exists Foods cascade;
-drop table if exists MealsFoodsAmount cascade;
-drop table if exists Workouts cascade;
-drop table if exists Activities cascade;
-drop table if exists Strategies cascade;
-drop table if exists UsersStrategies cascade;
-drop table if exists Days cascade;
-drop table if exists DaysWorkoutsOrder cascade;
-drop table if exists DaysFoodsAmount cascade;
-
-
 create table if not exists Users
 (
     UserId int primary key,
@@ -48,7 +33,7 @@ create table if not exists Foods
 (
     FoodId    int primary key,
     FoodTitle varchar(32) not null,
-    Cals       float       not null,
+    Cals      float       not null,
     Carbs     float       not null,
     Protein   float       not null,
     Fat       float       not null,
@@ -80,7 +65,8 @@ create table if not exists Activities
     EndedAt       timestamptz not null,
     UserId        int         not null references Users (UserId),
     WorkoutId     int         not null references Workouts (WorkoutId),
-    unique (StartedAt, UserId)
+    unique (StartedAt, UserId),
+    check (EndedAt > StartedAt)
 );
 
 create table if not exists Strategies
@@ -120,3 +106,14 @@ create table if not exists DaysFoodsAmount
     Weight float not null,
     primary key (DayId, FoodId)
 );
+
+-- В Postgres индексы автоматически создаются на Primary Key и вторичные ключи(unique).
+
+-- Для ускорения фильрта по дате, ускорит запрос "Найти тренировки пользователя выполненные больше месяца назад"
+create index if not exists idx_activities_startedat on Activities using btree (StartedAt);
+
+-- Для ускорения фильтра по углеводам, ускорит запрос "Найти все продукты с высоким содержанием углеводов"
+create index if not exists idx_foods_carbs on Foods using btree (Carbs);
+
+-- Для ускорение join-а с Strategies, ускорит запросы 'Стратегия содержащая больше всего тренировок' и 'Стратегия содержащая больше всего дней'
+create index if not exists idx_days_fk on Days using btree (StrategyId);
