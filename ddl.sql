@@ -1,3 +1,16 @@
+drop table if exists Users cascade;
+drop table if exists Logs cascade;
+drop table if exists Meals cascade;
+drop table if exists Foods cascade;
+drop table if exists MealsFoodsAmount cascade;
+drop table if exists Workouts cascade;
+drop table if exists Activities cascade;
+drop table if exists Strategies cascade;
+drop table if exists UsersStrategies cascade;
+drop table if exists Days cascade;
+drop table if exists DaysWorkoutsOrder cascade;
+drop table if exists DaysFoodsAmount cascade;
+
 create table if not exists Users
 (
     UserId int primary key,

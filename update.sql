@@ -201,3 +201,34 @@ select ChangeFood(16, 'Хлеб пшеничнй', 270, 49.5, 10.4, 3.4, 7);
 insert into MealsFoodsAmount(MealId, FoodId, Amount, Weight) values (1, 16, 1, 100);
 -- Изменение продукта, изменение не успешно, потому что продукт уже добавлен в прием пищи
 select ChangeFood(16, 'Хлеб пшеничнй измененный', 270, 49.5, 10.4, 3.4, 7);
+
+drop function writeLogTrigger() cascade;
+drop trigger writeLog on Users cascade;
+
+CREATE or replace FUNCTION writeLogTrigger()
+RETURNS TRIGGER AS $$
+DECLARE
+    idx int;
+BEGIN
+    idx = (select max(LogId) + 1 from Logs);
+    if tg_op = 'UPDATE' then
+        if (old.Weight != new.Weight) or (old.Height != new.Height) then
+            perform writeLog(idx, new.Weight, new.Height, new.UserId);
+        end if;
+    elseif tg_op = 'INSERT' then
+        perform writeLog(idx, NEW.Weight, NEW.Height, NEW.UserId);
+    end if;
+
+    RETURN NULL;
+END;
+$$ language 'plpgsql';
+
+-- on user update write log
+CREATE TRIGGER writeLog
+    AFTER INSERT OR UPDATE OF Height, Weight ON Users
+    FOR EACH ROW
+    EXECUTE PROCEDURE writeLogTrigger();
+
+update Users set height = 19.0 where UserId = 1;
+insert into Users(UserId, Name, Age, Sex, Weight, Height, Email)
+values (9, 'test', 25, True, 70, 180, 'test@mail.ru1');
